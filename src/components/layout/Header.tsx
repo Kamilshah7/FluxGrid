@@ -16,21 +16,21 @@ export function Header() {
           {/* Logo */}
           <motion.button
             onClick={scrollToTop}
-            className="pointer-events-auto group relative flex items-center gap-2"
+            className="pointer-events-auto group relative flex items-center gap-1.5 md:gap-2"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-accent flex items-center justify-center relative overflow-hidden">
+            <div className="w-7 h-7 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-accent flex items-center justify-center relative overflow-hidden">
                 <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
-                <span className="text-background font-black text-lg md:text-xl italic relative z-10">F</span>
+                <span className="text-background font-black text-base md:text-xl italic relative z-10">F</span>
             </div>
-            <span className="font-black text-xl md:text-2xl tracking-tighter italic group-hover:text-accent transition-colors duration-300">
+            <span className="font-black text-lg md:text-2xl tracking-tighter italic group-hover:text-accent transition-colors duration-300">
                 FLUXGRID <span className="text-white">STUDIO</span>
             </span>
             
-            {/* Logo Ripple Effect on Hover */}
+            {/* Logo Ripple Effect on Hover - Hidden on mobile to prevent overflow */}
             <motion.div 
-               className="absolute -inset-4 bg-accent/20 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none will-change-composite"
+               className="absolute -inset-4 bg-accent/20 rounded-full blur-2xl opacity-0 group-hover:opacity-100 hidden md:block transition-opacity pointer-events-none will-change-composite"
                animate={{
                  scale: [1, 1.2, 1],
                }}

@@ -19,7 +19,7 @@ const ContactForm = dynamic(() => import("@/components/sections/ContactForm").th
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-background selection:bg-accent/30 overflow-x-clip">
+    <main className="min-h-screen bg-background selection:bg-accent/30">
       <Header />
       
       <Hero />

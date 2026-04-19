@@ -95,7 +95,7 @@ export function WhyFluxgrid() {
   );
  
   return (
-    <div id="why-fluxgrid" ref={containerRef} className="relative h-[600vh] lg:block hidden bg-background select-none">
+    <div id="why-fluxgrid" ref={containerRef} className="relative h-[500vh] lg:block hidden bg-background select-none z-10">
       {/* GLOBAL NOISE OVERLAY */}
       <div className="fixed inset-0 pointer-events-none z-[100] opacity-[0.03] mix-blend-overlay" 
         style={{ backgroundImage: "url('data:image/svg+xml,%3Csvg viewBox=\"0 0 200 200\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cfilter id=\"noiseFilter\"%3E%3CfeTurbulence type=\"fractalNoise\" baseFrequency=\"0.65\" numOctaves=\"3\" stitchTiles=\"stitch\"/%3E%3C/filter%3E%3Crect width=\"100%25\" height=\"100%25\" filter=\"url(%23noiseFilter)\"/%3E%3C/svg%3E')" }} 
@@ -228,7 +228,7 @@ function PhaseScene({ index, progress, phase, isReducedMotion }: { index: number
   const opacity = useTransform(
     progress, 
     [start - windowSize, start, end - windowSize, end], 
-    [0, 1, 1, 0]
+    index === 0 ? [1, 1, 1, 0] : (index === 3 ? [0, 1, 1, 1] : [0, 1, 1, 0])
   );
   
   const y = useTransform(
@@ -245,7 +245,7 @@ function PhaseScene({ index, progress, phase, isReducedMotion }: { index: number
       style={{ 
         opacity: isReducedMotion ? undefined : opacity, 
         y: isReducedMotion ? 0 : y,
-        display: useTransform(progress, (p: number) => (p >= start - 0.1 && p <= end + 0.1 ? "flex" : "none")),
+        display: useTransform(progress, (p: number) => (p >= start - 0.2 && p <= end + 0.2 ? "flex" : "none")),
         pointerEvents: useTransform(progress, (p: number) => (p >= start && p <= end ? "auto" : "none"))
       }}
       className="absolute top-[24vh] bottom-[8vh] left-0 right-0 flex flex-col justify-center pl-20 pr-24 z-20 will-change-composite"
