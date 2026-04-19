@@ -8,7 +8,6 @@ const navItems = [
   { name: "Overview", id: "hero" },
   { name: "Why Us", id: "why-fluxgrid" },
   { name: "Performance", id: "performance-engine" },
-  { name: "Systems", id: "automation-systems" },
   { name: "Process", id: "how-it-works" },
   { name: "Offers", id: "offers" },
   { name: "FAQ", id: "faq" },
@@ -50,7 +49,7 @@ export function GlassNav() {
   return (
     <nav 
       className={cn(
-        "fixed top-6 left-1/2 -translate-x-1/2 z-[100] transition-all duration-500 will-change-transform",
+        "fixed top-6 left-1/2 -translate-x-1/2 z-[100] transition-all duration-500 will-change-transform hidden lg:block",
         scrolled ? "top-4 scale-95" : "top-8 scale-100"
       )}
     >

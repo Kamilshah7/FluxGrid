@@ -20,11 +20,11 @@ export function Header() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center relative overflow-hidden">
+            <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-accent flex items-center justify-center relative overflow-hidden">
                 <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
-                <span className="text-background font-black text-xl italic relative z-10">F</span>
+                <span className="text-background font-black text-lg md:text-xl italic relative z-10">F</span>
             </div>
-            <span className="font-black text-2xl tracking-tighter italic group-hover:text-accent transition-colors duration-300">
+            <span className="font-black text-xl md:text-2xl tracking-tighter italic group-hover:text-accent transition-colors duration-300">
                 FLUXGRID <span className="text-white">STUDIO</span>
             </span>
             

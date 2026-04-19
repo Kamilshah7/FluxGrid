@@ -78,7 +78,7 @@ export default function HeroGrid() {
         contain: "layout paint", // Critical for performance
         willChange: "transform"
       }}
-      className="absolute inset-0 grid grid-cols-2 lg:grid-cols-4 gap-8 p-12 opacity-80 scale-110 -translate-y-20 rotate-[-4deg] pointer-events-none"
+      className="absolute inset-0 grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 p-4 md:p-12 opacity-80 scale-110 -translate-y-20 rotate-[-4deg] pointer-events-none"
     >
       {tiles.map((_, i) => (
         <VideoTile key={i} index={i} />

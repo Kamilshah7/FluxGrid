@@ -65,7 +65,7 @@ export function Offers() {
             className={cn(
               "flex flex-col p-8 rounded-[2rem] transition-all duration-500 relative overflow-hidden",
               plan.highlight 
-                ? "bg-white/5 border-2 border-accent shadow-[0_0_50px_rgba(0,242,255,0.1)] scale-105 z-10" 
+                ? "bg-white/5 border-2 border-accent shadow-[0_0_50px_rgba(0,242,255,0.1)] md:scale-105 z-10" 
                 : "bg-white/[0.02] border border-white/5 hover:bg-white/[0.04]"
             )}
           >

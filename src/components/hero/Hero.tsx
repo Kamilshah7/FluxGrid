@@ -45,10 +45,10 @@ export function Hero() {
           variants={fadeIn}
           initial={lowMotion ? { opacity: 1, y: 0 } : "initial"}
           animate="animate"
-          className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-8 font-display drop-shadow-[0_20px_50px_rgba(0,0,0,1)] text-white"
+          className="text-4xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-8 font-display drop-shadow-[0_20px_50px_rgba(0,0,0,1)] text-white"
         >
           We turn your ad account into a <br className="hidden md:block" />
-          <span className="text-accent italic bg-clip-text text-transparent bg-gradient-to-r from-accent to-accent/60 drop-shadow-[0_10px_20px_rgba(0,242,255,0.4)]">creative superpower.</span>
+          <span className="text-accent italic bg-clip-text text-transparent bg-gradient-to-r from-accent to-accent/60 drop-shadow-[0_10px_20px_rgba(0,242,255,0.4)] px-2">creative superpower.</span>
         </motion.h1>
 
         <motion.p 
