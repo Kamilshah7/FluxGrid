@@ -1,6 +1,6 @@
 import { Variants } from 'framer-motion';
 
-export const PREDISP_EASE = [0.22, 1, 0.36, 1];
+export const PREDISP_EASE = [0.22, 1, 0.36, 1] as [number, number, number, number];
 
 export const fadeIn: Variants = {
   initial: { opacity: 0, y: 20 },
