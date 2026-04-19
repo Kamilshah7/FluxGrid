@@ -30,6 +30,11 @@ export function ContactForm() {
 
       if (response.ok) {
         setIsSubmitted(true);
+        // Automatic reset after 3 seconds in case of typos or multiple inquiries
+        setTimeout(() => {
+          setIsSubmitted(false);
+          setIsSubmitting(false);
+        }, 3000);
       } else {
         alert("Failed to send transmission. Please try again.");
       }
@@ -37,7 +42,10 @@ export function ContactForm() {
       console.error("Submission error:", error);
       alert("Submission failed. Check your connection.");
     } finally {
-      setIsSubmitting(false);
+      // Don't set isSubmitting false here if we want the 3sec delay to keep the success state
+      if (!isSubmitted) {
+        setIsSubmitting(false);
+      }
     }
   };
 
