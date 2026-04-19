@@ -37,6 +37,5 @@ export const sectionReveal: Variants = {
     opacity: 1, 
     y: 0,
     transition: { duration: 0.8, ease: PREDISP_EASE }
-  },
-  viewport: { once: true, margin: "-100px" }
+  }
 };
