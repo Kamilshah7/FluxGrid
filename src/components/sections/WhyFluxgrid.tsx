@@ -245,8 +245,8 @@ function PhaseScene({ index, progress, phase, isReducedMotion }: { index: number
       style={{ 
         opacity: isReducedMotion ? undefined : opacity, 
         y: isReducedMotion ? 0 : y,
-        display: useTransform(progress, p => (p >= start - 0.1 && p <= end + 0.1 ? "flex" : "none")),
-        pointerEvents: useTransform(progress, p => (p >= start && p <= end ? "auto" : "none"))
+        display: useTransform(progress, (p: number) => (p >= start - 0.1 && p <= end + 0.1 ? "flex" : "none")),
+        pointerEvents: useTransform(progress, (p: number) => (p >= start && p <= end ? "auto" : "none"))
       }}
       className="absolute top-[24vh] bottom-[8vh] left-0 right-0 flex flex-col justify-center pl-20 pr-24 z-20 will-change-composite"
     >
