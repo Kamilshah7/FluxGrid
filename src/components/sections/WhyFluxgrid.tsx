@@ -166,7 +166,7 @@ export function WhyFluxgrid() {
               index={i} 
               progress={smoothProgress} 
               phase={phase} 
-              isReducedMotion={isReducedMotion}
+              isReducedMotion={!!isReducedMotion}
             />
           ))}
         </div>
