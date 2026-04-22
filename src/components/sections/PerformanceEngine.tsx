@@ -6,7 +6,7 @@ import { SectionWrapper } from "../ui/SectionWrapper";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 
 /**
- * VIDEO SHOWCASE — STACKED CARD CAROUSEL
+ * VIDEO SHOWCASE — HORIZONTAL CARD FAN
  *
  * Drop .mp4 files into:  public/videos/showcase/
  * Then add them to SHOWCASE_VIDEOS below.
@@ -24,30 +24,16 @@ const AUTO_SCROLL_MS = 7000;
 export function PerformanceEngine() {
   const [current, setCurrent] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
   const total = SHOWCASE_VIDEOS.length;
 
-  // ---------- Visibility observer — pause everything when offscreen ----------
-  useEffect(() => {
-    const el = sectionRef.current;
-    if (!el) return;
-    const io = new IntersectionObserver(
-      ([entry]) => setIsVisible(entry.isIntersecting),
-      { rootMargin: "200px" } // Start loading slightly before visible
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-
-  // ---------- Auto-scroll (only when visible) ----------
+  // ---------- Auto-scroll ----------
   const resetTimer = useCallback(() => {
     if (timerRef.current) clearInterval(timerRef.current);
-    if (!isVisible) return;
     timerRef.current = setInterval(() => {
       setCurrent((prev) => (prev + 1) % total);
     }, AUTO_SCROLL_MS);
-  }, [total, isVisible]);
+  }, [total]);
 
   useEffect(() => {
     resetTimer();
@@ -55,6 +41,18 @@ export function PerformanceEngine() {
       if (timerRef.current) clearInterval(timerRef.current);
     };
   }, [resetTimer]);
+
+  // ---------- Play/pause management ----------
+  useEffect(() => {
+    videoRefs.current.forEach((video, i) => {
+      if (!video) return;
+      if (i === current) {
+        video.play().catch(() => {});
+      } else {
+        video.pause();
+      }
+    });
+  }, [current]);
 
   const goTo = (idx: number) => {
     setCurrent(idx);
@@ -66,7 +64,7 @@ export function PerformanceEngine() {
 
   return (
     <SectionWrapper id="performance-engine">
-      <div ref={sectionRef} className="flex flex-col gap-12 lg:gap-24 items-center lg:flex-row">
+      <div className="flex flex-col gap-12 lg:gap-24 items-center lg:flex-row">
         {/* ── TEXT COLUMN ── */}
         <div className="flex-1 space-y-8">
           <motion.div
@@ -139,64 +137,76 @@ export function PerformanceEngine() {
           </motion.button>
         </div>
 
-        {/* ── STACKED CARD CAROUSEL ── */}
-        <div className="flex-1 w-full max-w-[420px] mx-auto">
+        {/* ── HORIZONTAL CARD FAN CAROUSEL ── */}
+        <div className="flex-1 w-full max-w-[520px] mx-auto">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             className="relative"
           >
-            {/* Card stack */}
-            <div className="relative aspect-[9/16] mb-8" style={{ perspective: "1200px" }}>
+            {/* Card fan container */}
+            <div className="relative aspect-[9/16] max-w-[340px] mx-auto mb-8">
               {SHOWCASE_VIDEOS.map((video, i) => {
-                const offset = i - current;
+                // Position relative to current (wrapping)
+                let offset = i - current;
+                // Wrap around for smooth cycling
+                if (offset > Math.floor(total / 2)) offset -= total;
+                if (offset < -Math.floor(total / 2)) offset += total;
                 const absOffset = Math.abs(offset);
 
+                // Only render cards within ±2
                 if (absOffset > 2) return null;
 
                 const isActive = offset === 0;
-                const zIndex = total - absOffset;
-                const scale = 1 - absOffset * 0.06;
-                const translateY = absOffset * 18;
-                const opacity = isActive ? 1 : Math.max(0, 1 - absOffset * 0.35);
+                const zIndex = 10 - absOffset;
+
+                // Horizontal spread: active centered, others peeking from sides
+                const translateX = offset * 55; // px offset per position
+                const scale = isActive ? 1 : 0.88 - absOffset * 0.04;
+                const opacity = isActive ? 1 : Math.max(0.3, 0.7 - (absOffset - 1) * 0.3);
+                const rotateY = offset * -6; // subtle 3D rotation
 
                 return (
                   <motion.div
                     key={i}
                     animate={{
+                      x: translateX,
                       scale,
-                      y: translateY,
                       opacity,
-                      rotateX: isActive ? 0 : -2,
+                      rotateY,
                     }}
                     transition={{
-                      duration: 0.5,
+                      duration: 0.55,
                       ease: [0.32, 0.72, 0, 1],
                     }}
                     style={{
                       zIndex,
-                      transformOrigin: "center top",
+                      transformOrigin: "center center",
+                      perspective: "1000px",
+                      filter: isActive ? "none" : `blur(${Math.min(absOffset * 2, 4)}px) brightness(0.6)`,
                     }}
-                    className="absolute inset-0 rounded-3xl overflow-hidden border border-white/10 bg-panel shadow-2xl"
+                    onClick={() => { if (!isActive) goTo(i); }}
+                    className={`absolute inset-0 rounded-3xl overflow-hidden border bg-panel shadow-2xl ${
+                      isActive 
+                        ? "border-accent/20 shadow-[0_0_40px_rgba(0,242,255,0.1)] cursor-default" 
+                        : "border-white/5 cursor-pointer"
+                    }`}
                   >
-                    {/* Only load video src when section is visible and card is within ±1 */}
+                    {/* ALL videos are always loaded — preloaded for instant switching */}
                     <video
-                      src={isVisible && absOffset <= 1 ? video.src : undefined}
-                      autoPlay={isActive && isVisible}
+                      ref={(el) => { videoRefs.current[i] = el; }}
+                      src={video.src}
                       loop
                       muted
                       playsInline
-                      preload={absOffset === 0 ? "metadata" : "none"}
+                      preload="auto"
                       className="absolute inset-0 w-full h-full object-cover"
                     />
 
-                    {/* Subtle vignette */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-background/50 via-transparent to-transparent pointer-events-none" />
-
-                    {/* Active glow ring */}
+                    {/* Vignette on active */}
                     {isActive && (
-                      <div className="absolute inset-0 rounded-3xl ring-1 ring-accent/20 pointer-events-none" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-transparent pointer-events-none" />
                     )}
                   </motion.div>
                 );
@@ -204,7 +214,7 @@ export function PerformanceEngine() {
             </div>
 
             {/* Controls */}
-            <div className="flex items-center justify-between px-1">
+            <div className="flex items-center justify-between px-1 max-w-[340px] mx-auto">
               <div className="flex items-center gap-2">
                 <button
                   onClick={prev}
@@ -243,17 +253,15 @@ export function PerformanceEngine() {
             </div>
 
             {/* Progress bar */}
-            {isVisible && (
-              <div className="mt-3 h-[2px] bg-white/5 rounded-full overflow-hidden">
-                <motion.div
-                  key={current}
-                  initial={{ width: "0%" }}
-                  animate={{ width: "100%" }}
-                  transition={{ duration: AUTO_SCROLL_MS / 1000, ease: "linear" }}
-                  className="h-full bg-accent/40"
-                />
-              </div>
-            )}
+            <div className="mt-3 h-[2px] bg-white/5 rounded-full overflow-hidden max-w-[340px] mx-auto">
+              <motion.div
+                key={current}
+                initial={{ width: "0%" }}
+                animate={{ width: "100%" }}
+                transition={{ duration: AUTO_SCROLL_MS / 1000, ease: "linear" }}
+                className="h-full bg-accent/40"
+              />
+            </div>
           </motion.div>
         </div>
       </div>
