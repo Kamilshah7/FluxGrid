@@ -1,35 +1,237 @@
 "use client";
 
-import React from "react";
-import { SplitSection } from "../ui/SplitSection";
+import React, { useRef, useState, useEffect, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { SectionWrapper } from "../ui/SectionWrapper";
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+
+/**
+ * ──────────────────────────────────────────────
+ * VIDEO SHOWCASE CAROUSEL
+ * ──────────────────────────────────────────────
+ * 
+ * To add more videos, drop .mp4 files into:
+ *   public/videos/showcase/
+ * 
+ * Then add them to the SHOWCASE_VIDEOS array below.
+ * Each entry needs a `src` (path from /public) and
+ * an optional `label` shown as a caption overlay.
+ */
+const SHOWCASE_VIDEOS = [
+  { src: "/videos/showcase/reel-1.mp4", label: "Streetwear Lookbook" },
+  { src: "/videos/showcase/reel-2.mp4", label: "Product Launch" },
+  { src: "/videos/showcase/reel-3.mp4", label: "Cinematic Ad" },
+  // Add more:
+  // { src: "/videos/showcase/reel-4.mp4", label: "Collection Drop" },
+];
+
+const AUTO_SCROLL_MS = 7000;
 
 export function PerformanceEngine() {
+  const [current, setCurrent] = useState(0);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const total = SHOWCASE_VIDEOS.length;
+
+  // ---------- Auto-scroll ----------
+  const resetTimer = useCallback(() => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => {
+      setCurrent((prev) => (prev + 1) % total);
+    }, AUTO_SCROLL_MS);
+  }, [total]);
+
+  useEffect(() => {
+    resetTimer();
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [resetTimer]);
+
+  const goTo = (idx: number) => {
+    setCurrent(idx);
+    resetTimer();
+  };
+
+  const next = () => goTo((current + 1) % total);
+  const prev = () => goTo((current - 1 + total) % total);
+
   return (
-    <SplitSection
-      id="performance-engine"
-      badge="Performance Engine"
-      title="Creative that actually converts."
-      description="Most creative agencies focus on 'vibe'. We focus on the math of the click. Our assets are engineered using performance data to ensure they drive results, not just likes."
-      points={[
-        "Hook-first structure designed for 3-second attention spans.",
-        "Dynamic pacing that keeps the user engaged until the CTA.",
-        "Data-driven iteration: we constantly refine assets based on ad performance.",
-        "Cinematic production value that builds long-term brand equity.",
-        "Mobile-first orientation optimized for social platforms."
-      ]}
-      mediaPosition="right"
-      aspect="9/16"
-      mediaPlaceholder={
-        <video 
-          src="/videos/features/performance.mp4" 
-          autoPlay 
-          loop 
-          muted 
-          playsInline 
-          preload="metadata"
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-      }
-    />
+    <SectionWrapper id="performance-engine">
+      <div className="flex flex-col gap-12 lg:gap-24 items-center lg:flex-row">
+        {/* ── TEXT COLUMN ── */}
+        <div className="flex-1 space-y-8">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 border border-accent/20"
+          >
+            <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+            <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-accent">
+              Performance Engine
+            </span>
+          </motion.div>
+
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-4xl md:text-5xl font-bold font-display italic leading-[1.1]"
+          >
+            Creatives that actually convert.
+          </motion.h2>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="text-lg text-white/60 max-w-xl leading-relaxed"
+          >
+            Most creative agencies focus on &lsquo;vibe&rsquo;. We focus on the math of the click.
+            Our assets are engineered using performance data to ensure they drive results, not just likes.
+          </motion.p>
+
+          <motion.ul
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="space-y-4 pt-4"
+          >
+            {[
+              "Hook-first structure designed for 3-second attention spans.",
+              "Dynamic pacing that keeps the user engaged until the CTA.",
+              "Data-driven iteration: we constantly refine assets based on ad performance.",
+              "Cinematic production value that builds long-term brand equity.",
+              "Mobile-first orientation optimized for social platforms.",
+            ].map((point, i) => (
+              <li key={i} className="flex items-start gap-3 group">
+                <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-accent/40 group-hover:bg-accent transition-colors shrink-0" />
+                <span className="text-white/80 group-hover:text-white transition-colors">
+                  {point}
+                </span>
+              </li>
+            ))}
+          </motion.ul>
+
+          <motion.button
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3 }}
+            onClick={() => {
+              document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
+            }}
+            className="group mt-8 glass px-8 py-4 rounded-full flex items-center gap-3 hover:bg-white/5 transition-all outline-none"
+          >
+            <span className="font-bold text-sm tracking-widest uppercase">Start Building</span>
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </motion.button>
+        </div>
+
+        {/* ── VIDEO CAROUSEL COLUMN ── */}
+        <div className="flex-1 w-full max-w-[420px] mx-auto">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="relative"
+          >
+            {/* Carousel viewport */}
+            <div className="relative aspect-[9/16] rounded-3xl overflow-hidden border border-white/10 bg-panel shadow-2xl">
+              <AnimatePresence mode="wait">
+                <motion.video
+                  key={current}
+                  src={SHOWCASE_VIDEOS[current].src}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  preload="metadata"
+                  initial={{ opacity: 0, x: 40 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -40 }}
+                  transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+              </AnimatePresence>
+
+              {/* Bottom gradient scrim */}
+              <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent pointer-events-none" />
+
+              {/* Caption overlay */}
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={current}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.3 }}
+                  className="absolute bottom-6 left-6 right-6 z-10"
+                >
+                  <span className="inline-block px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-[10px] font-bold tracking-[0.15em] uppercase text-white/80">
+                    {SHOWCASE_VIDEOS[current].label}
+                  </span>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            {/* ── CONTROLS: Arrows + Dots ── */}
+            <div className="flex items-center justify-between mt-5 px-1">
+              {/* Arrow buttons */}
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={prev}
+                  aria-label="Previous video"
+                  className="w-9 h-9 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors"
+                >
+                  <ChevronLeft className="w-4 h-4 text-white/70" />
+                </button>
+                <button
+                  onClick={next}
+                  aria-label="Next video"
+                  className="w-9 h-9 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors"
+                >
+                  <ChevronRight className="w-4 h-4 text-white/70" />
+                </button>
+              </div>
+
+              {/* Dot indicators */}
+              <div className="flex items-center gap-2">
+                {SHOWCASE_VIDEOS.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => goTo(i)}
+                    aria-label={`Go to video ${i + 1}`}
+                    className={`h-1.5 rounded-full transition-all duration-300 ${
+                      i === current
+                        ? "w-6 bg-accent shadow-[0_0_10px_rgba(0,242,255,0.4)]"
+                        : "w-1.5 bg-white/20 hover:bg-white/40"
+                    }`}
+                  />
+                ))}
+              </div>
+
+              {/* Counter */}
+              <span className="text-[11px] font-mono text-white/30 tabular-nums">
+                {String(current + 1).padStart(2, "0")}/{String(total).padStart(2, "0")}
+              </span>
+            </div>
+
+            {/* Auto-scroll progress bar */}
+            <div className="mt-3 h-[2px] bg-white/5 rounded-full overflow-hidden">
+              <motion.div
+                key={current}
+                initial={{ width: "0%" }}
+                animate={{ width: "100%" }}
+                transition={{ duration: AUTO_SCROLL_MS / 1000, ease: "linear" }}
+                className="h-full bg-accent/40"
+              />
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </SectionWrapper>
   );
 }
