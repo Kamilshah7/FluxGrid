@@ -18,11 +18,11 @@ import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
  * an optional `label` shown as a caption overlay.
  */
 const SHOWCASE_VIDEOS = [
-  { src: "/videos/showcase/reel-1.mp4", label: "Streetwear Lookbook" },
-  { src: "/videos/showcase/reel-2.mp4", label: "Product Launch" },
-  { src: "/videos/showcase/reel-3.mp4", label: "Cinematic Ad" },
-  // Add more:
-  // { src: "/videos/showcase/reel-4.mp4", label: "Collection Drop" },
+  { src: "/videos/showcase/reel-1.mp4" },
+  { src: "/videos/showcase/reel-2.mp4" },
+  { src: "/videos/showcase/reel-3.mp4" },
+  { src: "/videos/showcase/reel-4.mp4" },
+  { src: "/videos/showcase/reel-5.mp4" },
 ];
 
 const AUTO_SCROLL_MS = 7000;
@@ -160,21 +160,7 @@ export function PerformanceEngine() {
               {/* Bottom gradient scrim */}
               <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent pointer-events-none" />
 
-              {/* Caption overlay */}
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={current}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3 }}
-                  className="absolute bottom-6 left-6 right-6 z-10"
-                >
-                  <span className="inline-block px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-[10px] font-bold tracking-[0.15em] uppercase text-white/80">
-                    {SHOWCASE_VIDEOS[current].label}
-                  </span>
-                </motion.div>
-              </AnimatePresence>
+
             </div>
 
             {/* ── CONTROLS: Arrows + Dots ── */}
