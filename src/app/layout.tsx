@@ -26,7 +26,6 @@ export const metadata: Metadata = {
 };
 
 import { ClientWrappers } from "@/components/layout/ClientWrappers";
-import { CursorGlow } from "@/components/ui/CursorGlow";
 
 export default function RootLayout({
   children,
@@ -37,8 +36,7 @@ export default function RootLayout({
     <html lang="en" className="dark">
       <body className={`${inter.variable} ${outfit.variable} font-sans antialiased bg-background text-foreground`}>
         <ClientWrappers>
-          <div className="fixed inset-0 noise-overlay pointer-events-none z-[90]" />
-          <CursorGlow />
+          <div className="fixed inset-0 noise-overlay pointer-events-none z-[90]" style={{ contain: "strict" }} />
           {children}
         </ClientWrappers>
       </body>

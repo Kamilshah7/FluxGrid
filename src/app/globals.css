@@ -101,6 +101,16 @@ html {
   }
 }
 
+/* Below-fold sections: skip rendering until scrolled to */
+#performance-engine,
+#how-it-works,
+#offers,
+#faq,
+#contact {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 800px;
+}
+
 /* Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
   html {

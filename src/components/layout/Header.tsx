@@ -28,17 +28,9 @@ export function Header() {
                 FLUXGRID <span className="text-white">STUDIO</span>
             </span>
             
-            {/* Logo Ripple Effect on Hover - Hidden on mobile to prevent overflow */}
-            <motion.div 
-               className="absolute -inset-4 bg-accent/20 rounded-full blur-2xl opacity-0 group-hover:opacity-100 hidden md:block transition-opacity pointer-events-none will-change-composite"
-               animate={{
-                 scale: [1, 1.2, 1],
-               }}
-               transition={{
-                 duration: 2,
-                 repeat: Infinity,
-                 ease: "easeInOut"
-               }}
+            {/* Logo Ripple Effect on Hover - CSS-only, no JS animation loop */}
+            <div 
+               className="absolute -inset-4 bg-accent/20 rounded-full blur-2xl opacity-0 group-hover:opacity-100 hidden md:block transition-opacity duration-500 pointer-events-none"
             />
           </motion.button>
         </div>

@@ -43,7 +43,7 @@ function VideoTile({ index }: { index: number }) {
         loop
         muted
         playsInline
-        preload={isWeakDevice ? "none" : "auto"}
+        preload={isWeakDevice ? "none" : "metadata"}
         onLoadedData={() => setIsReady(true)}
         className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${isReady ? 'opacity-80' : 'opacity-0'}`}
       />

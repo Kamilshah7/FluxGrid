@@ -8,6 +8,16 @@ const SmoothScroll = dynamic(
   { ssr: false }
 );
 
+const CursorGlow = dynamic(
+  () => import("@/components/ui/CursorGlow").then((mod) => mod.CursorGlow),
+  { ssr: false }
+);
+
 export function ClientWrappers({ children }: { children: React.ReactNode }) {
-  return <SmoothScroll>{children}</SmoothScroll>;
+  return (
+    <SmoothScroll>
+      <CursorGlow />
+      {children}
+    </SmoothScroll>
+  );
 }

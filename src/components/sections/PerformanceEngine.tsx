@@ -6,9 +6,7 @@ import { SectionWrapper } from "../ui/SectionWrapper";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 
 /**
- * ──────────────────────────────────────────────
  * VIDEO SHOWCASE — STACKED CARD CAROUSEL
- * ──────────────────────────────────────────────
  *
  * Drop .mp4 files into:  public/videos/showcase/
  * Then add them to SHOWCASE_VIDEOS below.
@@ -26,14 +24,30 @@ const AUTO_SCROLL_MS = 7000;
 export function PerformanceEngine() {
   const [current, setCurrent] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
   const total = SHOWCASE_VIDEOS.length;
 
+  // ---------- Visibility observer — pause everything when offscreen ----------
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => setIsVisible(entry.isIntersecting),
+      { rootMargin: "200px" } // Start loading slightly before visible
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  // ---------- Auto-scroll (only when visible) ----------
   const resetTimer = useCallback(() => {
     if (timerRef.current) clearInterval(timerRef.current);
+    if (!isVisible) return;
     timerRef.current = setInterval(() => {
       setCurrent((prev) => (prev + 1) % total);
     }, AUTO_SCROLL_MS);
-  }, [total]);
+  }, [total, isVisible]);
 
   useEffect(() => {
     resetTimer();
@@ -52,7 +66,7 @@ export function PerformanceEngine() {
 
   return (
     <SectionWrapper id="performance-engine">
-      <div className="flex flex-col gap-12 lg:gap-24 items-center lg:flex-row">
+      <div ref={sectionRef} className="flex flex-col gap-12 lg:gap-24 items-center lg:flex-row">
         {/* ── TEXT COLUMN ── */}
         <div className="flex-1 space-y-8">
           <motion.div
@@ -133,23 +147,19 @@ export function PerformanceEngine() {
             viewport={{ once: true }}
             className="relative"
           >
-            {/* Card stack container — extra bottom padding for stacked depth cards */}
+            {/* Card stack */}
             <div className="relative aspect-[9/16] mb-8" style={{ perspective: "1200px" }}>
               {SHOWCASE_VIDEOS.map((video, i) => {
-                // Calculate position relative to current
                 const offset = i - current;
                 const absOffset = Math.abs(offset);
 
-                // Only render cards within ±2 of current for performance
                 if (absOffset > 2) return null;
 
-                // Stack behind: scale down, translate down, reduce opacity
                 const isActive = offset === 0;
                 const zIndex = total - absOffset;
                 const scale = 1 - absOffset * 0.06;
                 const translateY = absOffset * 18;
                 const opacity = isActive ? 1 : Math.max(0, 1 - absOffset * 0.35);
-                const blur = isActive ? 0 : absOffset * 1.5;
 
                 return (
                   <motion.div
@@ -158,7 +168,6 @@ export function PerformanceEngine() {
                       scale,
                       y: translateY,
                       opacity,
-                      filter: `blur(${blur}px)`,
                       rotateX: isActive ? 0 : -2,
                     }}
                     transition={{
@@ -169,15 +178,16 @@ export function PerformanceEngine() {
                       zIndex,
                       transformOrigin: "center top",
                     }}
-                    className="absolute inset-0 rounded-3xl overflow-hidden border border-white/10 bg-panel shadow-2xl will-change-transform"
+                    className="absolute inset-0 rounded-3xl overflow-hidden border border-white/10 bg-panel shadow-2xl"
                   >
+                    {/* Only load video src when section is visible and card is within ±1 */}
                     <video
-                      src={video.src}
-                      autoPlay={isActive}
+                      src={isVisible && absOffset <= 1 ? video.src : undefined}
+                      autoPlay={isActive && isVisible}
                       loop
                       muted
                       playsInline
-                      preload={absOffset <= 1 ? "metadata" : "none"}
+                      preload={absOffset === 0 ? "metadata" : "none"}
                       className="absolute inset-0 w-full h-full object-cover"
                     />
 
@@ -193,9 +203,8 @@ export function PerformanceEngine() {
               })}
             </div>
 
-            {/* ── CONTROLS ── */}
+            {/* Controls */}
             <div className="flex items-center justify-between px-1">
-              {/* Arrows */}
               <div className="flex items-center gap-2">
                 <button
                   onClick={prev}
@@ -213,7 +222,6 @@ export function PerformanceEngine() {
                 </button>
               </div>
 
-              {/* Dots */}
               <div className="flex items-center gap-2">
                 {SHOWCASE_VIDEOS.map((_, i) => (
                   <button
@@ -229,22 +237,23 @@ export function PerformanceEngine() {
                 ))}
               </div>
 
-              {/* Counter */}
               <span className="text-[11px] font-mono text-white/30 tabular-nums">
                 {String(current + 1).padStart(2, "0")}/{String(total).padStart(2, "0")}
               </span>
             </div>
 
             {/* Progress bar */}
-            <div className="mt-3 h-[2px] bg-white/5 rounded-full overflow-hidden">
-              <motion.div
-                key={current}
-                initial={{ width: "0%" }}
-                animate={{ width: "100%" }}
-                transition={{ duration: AUTO_SCROLL_MS / 1000, ease: "linear" }}
-                className="h-full bg-accent/40"
-              />
-            </div>
+            {isVisible && (
+              <div className="mt-3 h-[2px] bg-white/5 rounded-full overflow-hidden">
+                <motion.div
+                  key={current}
+                  initial={{ width: "0%" }}
+                  animate={{ width: "100%" }}
+                  transition={{ duration: AUTO_SCROLL_MS / 1000, ease: "linear" }}
+                  className="h-full bg-accent/40"
+                />
+              </div>
+            )}
           </motion.div>
         </div>
       </div>
