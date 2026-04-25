@@ -34,6 +34,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
+      <head>
+        <script id="vtag-ai-js" async src="https://r2.leadsy.ai/tag.js" data-pid="1hiPWUbotKB3an1DY" data-version="062024"></script>
+      </head>
       <body className={`${inter.variable} ${outfit.variable} font-sans antialiased bg-background text-foreground`}>
         <ClientWrappers>
           <div className="fixed inset-0 noise-overlay pointer-events-none z-[90]" style={{ contain: "strict" }} />
