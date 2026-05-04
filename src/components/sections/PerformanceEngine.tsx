@@ -17,6 +17,8 @@ const SHOWCASE_VIDEOS = [
   { src: "/videos/showcase/reel-3.mp4" },
   { src: "/videos/showcase/reel-4.mp4" },
   { src: "/videos/showcase/reel-5.mp4" },
+  { src: "/videos/showcase/reel-6.mp4" },
+  { src: "/videos/showcase/reel-7.mp4" },
 ];
 
 const AUTO_SCROLL_MS = 7000;
