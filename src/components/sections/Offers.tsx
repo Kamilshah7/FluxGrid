@@ -8,7 +8,7 @@ const plans = [
   {
     name: "Testing Pack",
     description: "Perfect for brands looking to find their winning hooks without the overhead.",
-    price: "$299/mo",
+    price: "$399/mo",
     features: [
       "8 high-performance ad creatives",
       "1–2 core concepts",
@@ -21,7 +21,7 @@ const plans = [
   {
     name: "Scale Pack",
     description: "The essential creative volume needed to sustain and scale aggressive ad spend.",
-    price: "$499/mo",
+    price: "$599/mo",
     features: [
       "16 high-performance ad creatives",
       "Multiple unique concepts",
@@ -34,7 +34,7 @@ const plans = [
   {
     name: "Creative Partner",
     description: "A dedicated creative department for brands that treat content as their #1 lever.",
-    price: "$749/mo",
+    price: "$799/mo",
     features: [
       "24 high-performance ad creatives",
       "Priority turnaround",
